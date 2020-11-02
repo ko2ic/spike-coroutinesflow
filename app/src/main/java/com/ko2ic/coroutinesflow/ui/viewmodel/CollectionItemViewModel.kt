@@ -1,0 +1,3 @@
+package com.ko2ic.coroutinesflow.ui.viewmodel
+
+interface CollectionItemViewModel

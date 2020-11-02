@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.ko2ic.coroutinesflow.ui.home.HomeViewModel" />
+            type="com.ko2ic.coroutinesflow.ui.viewmodel.HomeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
