@@ -1,13 +1,14 @@
 package com.ko2ic.coroutinesflow.ui.viewmodel
 
 import androidx.databinding.ObservableArrayList
-import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.ko2ic.coroutinesflow.model.Comment
 
 class HomeViewModel : ViewModel() {
 
+    // TODO ここをLiveDataにできるかどうか
     val viewModels = ObservableArrayList<CommentViewModel>()
 
     private val _list = MutableLiveData<List<CommentViewModel>>().apply {
@@ -48,20 +49,3 @@ class HomeViewModel : ViewModel() {
         viewModels.addAll(itemViewModels)
     }
 }
-
-data class CommentViewModel(val comment: Comment) : CollectionItemViewModel {
-    val body = ObservableField("")
-
-    init {
-        this.body.set(comment.body)
-    }
-}
-
-data class Comment(
-    val postId: Long,
-
-    val id: Long,
-    val name: String,
-    val email: String,
-    val body: String
-)
