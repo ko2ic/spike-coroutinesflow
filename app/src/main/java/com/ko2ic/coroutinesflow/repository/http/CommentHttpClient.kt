@@ -9,4 +9,7 @@ interface CommentHttpClient {
     @GET("comments")
     suspend fun fetchComments(@Query("postId") postId: Int): List<CommentEntity>
 
+    @GET("error")
+    suspend fun error(): List<CommentEntity>
+
 }

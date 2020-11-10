@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ko2ic.coroutinesflow.R
 import com.ko2ic.coroutinesflow.databinding.FragmentHomeBinding
@@ -42,10 +41,6 @@ class HomeFragment : Fragment() {
 
         binding.recyclerView.adapter =
             RecyclerViewAdapter(homeViewModel.viewModels, itemViewTypeProvider)
-
-        homeViewModel.list.observe(viewLifecycleOwner, Observer {
-            homeViewModel.render(it)
-        })
 
         val view = binding.root
 

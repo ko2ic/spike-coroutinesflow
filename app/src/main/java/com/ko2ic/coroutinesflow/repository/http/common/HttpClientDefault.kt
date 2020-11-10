@@ -12,3 +12,13 @@ open class HttpClientDefault : HttpClientBase() {
         return builder
     }
 }
+
+open class HttpClientErrorMock : HttpClientBase() {
+
+    override val baseUrl: String = "https://api.github.com"
+
+    override fun addInterceptor(builder: OkHttpClient.Builder): OkHttpClient.Builder {
+        builder.addInterceptor(RequestHeaderInterceptor())
+        return builder
+    }
+}

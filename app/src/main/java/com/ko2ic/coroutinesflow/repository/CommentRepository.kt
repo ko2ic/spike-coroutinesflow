@@ -12,4 +12,10 @@ class CommentRepository(private val httpClient: HttpClient) {
             it.fetchComments(postId)
         }
     }
+
+    fun error(): Flow<List<CommentEntity>?> {
+        return httpClient.call<List<CommentEntity>, CommentHttpClient> {
+            it.error()
+        }
+    }
 }

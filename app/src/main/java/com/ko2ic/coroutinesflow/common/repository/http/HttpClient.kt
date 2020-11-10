@@ -1,5 +1,6 @@
 package com.ko2ic.coroutinesflow.common.repository.http
 
+import com.ko2ic.coroutinesflow.common.model.exception.HttpErrorTypeException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -14,9 +15,9 @@ class HttpClient(val locator: HttpClientLocator) {
         return flow {
             try {
                 emit(call(client))
-            } catch (e: Exception) {
-                // TODO エラー処理をする
-                throw e
+            } catch (e: Throwable) {
+                val exception: HttpErrorTypeException = HttpClientBase.asHttpErrorTypeException(e)
+                throw exception
             }
         }.flowOn(Dispatchers.IO)
     }

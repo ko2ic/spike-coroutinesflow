@@ -1,5 +1,7 @@
 package com.ko2ic.coroutinesflow.common.model.valueobject.enums
 
+import kotlinx.serialization.json.JsonElement
+
 sealed class HttpErrorType {
 
     class None() : HttpErrorType()
@@ -12,7 +14,7 @@ sealed class HttpErrorType {
     class CannotConnectToHost(val t: Throwable) :
         HttpErrorType() // ホストに接続できなかった場合（ホストがダウン。Portが受け付けない状態など）ConnectException
 
-    data class StatusCode(val code: Int, val map: Map<String, Any>?, val t: Throwable) :
+    data class StatusCode(val code: Int, val jsonElement: JsonElement?, val t: Throwable) :
         HttpErrorType() {
         fun isBadRequest() = this.code == 400
         fun isUnauthorized() = this.code == 401

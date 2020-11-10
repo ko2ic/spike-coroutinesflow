@@ -8,7 +8,6 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.HttpException
 import retrofit2.Retrofit
-import java.io.IOException
 import java.net.ConnectException
 import java.net.NoRouteToHostException
 import java.net.SocketTimeoutException
@@ -45,16 +44,17 @@ abstract class HttpClientBase : HttpClientLocator {
                 var json: String? = null
                 try {
                     json = excption.response()?.errorBody()?.string()
-                    val map = null // TODO jsonをmapに変換する
 
+                    val element = if (json == null) null else Json.parseToJsonElement(json)
                     HttpErrorTypeException(
                         HttpErrorType.StatusCode(
                             excption.code(),
-                            map,
+                            element,
                             throwable
                         )
                     )
-                } catch (e: IOException) {
+
+                } catch (e: Exception) {
                     HttpErrorTypeException(HttpErrorType.Unknown(throwable))
                 }
             }

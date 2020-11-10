@@ -1,18 +1,24 @@
 package com.ko2ic.coroutinesflow.ui.viewmodel
 
 import androidx.databinding.ObservableArrayList
+import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ko2ic.coroutinesflow.common.model.exception.HttpErrorTypeException
 import com.ko2ic.coroutinesflow.common.repository.http.HttpClient
 import com.ko2ic.coroutinesflow.repository.CommentRepository
 import com.ko2ic.coroutinesflow.repository.http.common.HttpClientDefault
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import com.ko2ic.coroutinesflow.repository.http.common.HttpClientErrorMock
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
 
 class HomeViewModel : ViewModel() {
+
+    val input = ObservableField("")
 
     // TODO ここをLiveDataにできるかどうか
     val viewModels = ObservableArrayList<CommentViewModel>()
@@ -22,17 +28,71 @@ class HomeViewModel : ViewModel() {
     val list: LiveData<List<CommentViewModel>> = _list
 
     fun create() {
-        viewModelScope.launch(Dispatchers.Main) {
-            CommentRepository(HttpClient(HttpClientDefault())).fetchComments(1).collect {
-                it?.map { entity -> CommentViewModel(entity) }.orEmpty().also { viewModels ->
-                    this@HomeViewModel.render(viewModels)
-                }
-            }
-        }
+        load(1)
     }
 
-    fun render(itemViewModels: List<CommentViewModel>) {
+    fun onSearchClick(): Action = Action {
+        load(Integer.parseInt(input.get()!!))
+    }
+
+    fun onSearchClick2(): Action = Action {
+        // HttpClientErrorMockで必ずエラーが出るAPIにする
+        CommentRepository(HttpClient(HttpClientErrorMock())).error().onEach {
+        }.catch { cause ->
+            val e = cause as HttpErrorTypeException
+            print(e.errorType)
+        }.onCompletion {
+            // TODO
+            print("onCompletion")
+        }.launchIn(viewModelScope)
+    }
+
+    private fun load(postId: Int) {
+        CommentRepository(HttpClient(HttpClientDefault())).fetchComments(postId).onEach {
+            it?.map { entity -> CommentViewModel(entity) }.orEmpty().also { viewModels ->
+                this@HomeViewModel.render(viewModels)
+            }
+        }.catch { cause ->
+            val e = cause as HttpErrorTypeException
+        }.onCompletion {
+            // TODO
+        }.launchIn(viewModelScope)
+    }
+
+    private fun render(itemViewModels: List<CommentViewModel>) {
         viewModels.clear()
         viewModels.addAll(itemViewModels)
     }
+
+//    private fun load(postId: Int) {
+//        viewModelScope.launch(Dispatchers.Main) {
+//            try {
+//                CommentRepository(HttpClient(HttpClientDefault())).fetchComments(postId).collect {
+//                    it?.map { entity -> CommentViewModel(entity) }.orEmpty().also { viewModels ->
+//                        this@HomeViewModel.render(viewModels)
+//                    }
+//                }
+//
+//            } catch (e: HttpErrorTypeException) {
+//                // TODO
+//            }
+//        }
+//    }
+
+//    private fun load(postId: Int) {
+//        viewModelScope.launch(Dispatchers.Main) {
+//            runCatching {
+//                CommentRepository(HttpClient(HttpClientDefault())).fetchComments(postId)
+//            }.onSuccess {
+//                it.collect {
+//                    it?.map { entity -> CommentViewModel(entity) }.orEmpty().also { viewModels ->
+//                        this@HomeViewModel.render(viewModels)
+//                    }
+//                }
+//            }.onFailure {
+//                val e = it as HttpErrorTypeException
+//                // TODO
+//            }
+//        }
+//    }
 }
