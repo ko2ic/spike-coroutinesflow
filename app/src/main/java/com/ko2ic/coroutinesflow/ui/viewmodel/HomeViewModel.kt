@@ -2,8 +2,6 @@ package com.ko2ic.coroutinesflow.ui.viewmodel
 
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ko2ic.coroutinesflow.common.model.exception.HttpErrorTypeException
@@ -20,12 +18,8 @@ class HomeViewModel : ViewModel() {
 
     val input = ObservableField("")
 
-    // TODO ここをLiveDataにできるかどうか
+    // LiveData不要説(observeしないし)
     val viewModels = ObservableArrayList<CommentViewModel>()
-
-    private val _list = MutableLiveData<List<CommentViewModel>>()
-
-    val list: LiveData<List<CommentViewModel>> = _list
 
     fun create() {
         load(1)
@@ -36,7 +30,7 @@ class HomeViewModel : ViewModel() {
     }
 
     fun onSearchClick2(): Action = Action {
-        // HttpClientErrorMockで必ずエラーが出るAPIにする
+        // HttpClientErrorMockで必ずエラーが出るAPIにしている
         CommentRepository(HttpClient(HttpClientErrorMock())).error().onEach {
         }.catch { cause ->
             val e = cause as HttpErrorTypeException
