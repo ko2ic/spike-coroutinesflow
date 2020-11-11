@@ -24,10 +24,12 @@ class HomeViewModel : ViewModel() {
     val viewModels = ObservableArrayList<CommentViewModel>()
 
     val freeInput = ObservableField("")
-    val freeOutput = ObservableField("")
+    val freeOutput = ObservableField("この文言は見えないはず")
+    val freeOutputVisivility = ObservableField(false)
 
     init {
         freeInput.toFlow().onEach {
+            freeOutputVisivility.set(true)
             freeOutput.set(it)
         }.launchIn(viewModelScope)
     }
@@ -37,10 +39,15 @@ class HomeViewModel : ViewModel() {
     }
 
     fun onSearchClick(): Action = Action {
-        load(Integer.parseInt(input.get()!!))
+        if (!input.get().isNullOrBlank()) {
+            load(Integer.parseInt(input.get()!!))
+        }
+        freeOutputVisivility.set(false)
     }
 
     fun onSearchClick2(): Action = Action {
+        freeOutputVisivility.set(true)
+
         // HttpClientErrorMockで必ずエラーが出るAPIにしている
         CommentRepository(HttpClient(HttpClientErrorMock())).error().onEach {
         }.catch { cause ->

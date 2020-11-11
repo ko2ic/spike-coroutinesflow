@@ -31,7 +31,7 @@ public class BindingConversions {
                     try {
                         listener.run();
                     } catch (Exception e) {
-                        throw new IllegalArgumentException("例外が出ない想定");
+                        throw new IllegalArgumentException("例外が出ない想定", e);
                     }
                 }
             };
