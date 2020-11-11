@@ -9,7 +9,7 @@ import androidx.databinding.BindingMethod;
 import androidx.databinding.BindingMethods;
 
 import com.google.android.material.navigation.NavigationView;
-import com.ko2ic.coroutinesflow.ui.viewmodel.Action;
+import com.ko2ic.coroutinesflow.common.ui.viewmodel.Action;
 
 import org.jetbrains.annotations.Nullable;
 

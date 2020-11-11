@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ko2ic.coroutinesflow.common.model.exception.HttpErrorTypeException
 import com.ko2ic.coroutinesflow.common.repository.http.HttpClient
+import com.ko2ic.coroutinesflow.common.ui.viewmodel.Action
+import com.ko2ic.coroutinesflow.common.ui.viewmodel.toFlow
 import com.ko2ic.coroutinesflow.repository.CommentRepository
 import com.ko2ic.coroutinesflow.repository.http.common.HttpClientDefault
 import com.ko2ic.coroutinesflow.repository.http.common.HttpClientErrorMock
@@ -20,6 +22,15 @@ class HomeViewModel : ViewModel() {
 
     // LiveData不要説(observeしないし)
     val viewModels = ObservableArrayList<CommentViewModel>()
+
+    val freeInput = ObservableField("")
+    val freeOutput = ObservableField("")
+
+    init {
+        freeInput.toFlow().onEach {
+            freeOutput.set(it)
+        }.launchIn(viewModelScope)
+    }
 
     fun create() {
         load(1)
