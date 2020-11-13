@@ -2,6 +2,7 @@ package com.ko2ic.coroutinesflow.ui.viewmodel
 
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ko2ic.coroutinesflow.common.model.exception.HttpErrorTypeException
@@ -9,14 +10,13 @@ import com.ko2ic.coroutinesflow.common.repository.http.HttpClient
 import com.ko2ic.coroutinesflow.common.ui.viewmodel.Action
 import com.ko2ic.coroutinesflow.common.ui.viewmodel.toFlow
 import com.ko2ic.coroutinesflow.repository.CommentRepository
-import com.ko2ic.coroutinesflow.repository.http.common.HttpClientDefault
 import com.ko2ic.coroutinesflow.repository.http.common.HttpClientErrorMock
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel @ViewModelInject constructor(val repository: CommentRepository) : ViewModel() {
 
     val input = ObservableField("")
 
@@ -60,7 +60,7 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun load(postId: Int) {
-        CommentRepository(HttpClient(HttpClientDefault())).fetchComments(postId).onEach {
+        repository.fetchComments(postId).onEach {
             it?.map { entity -> CommentViewModel(entity) }.orEmpty().also { viewModels ->
                 this@HomeViewModel.render(viewModels)
             }

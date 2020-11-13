@@ -6,25 +6,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.ko2ic.coroutinesflow.R
 import com.ko2ic.coroutinesflow.databinding.FragmentHomeBinding
 import com.ko2ic.coroutinesflow.ui.adapter.ItemViewTypeProvider
 import com.ko2ic.coroutinesflow.ui.adapter.RecyclerViewAdapter
 import com.ko2ic.coroutinesflow.ui.viewmodel.CollectionItemViewModel
 import com.ko2ic.coroutinesflow.ui.viewmodel.HomeViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    private lateinit var homeViewModel: HomeViewModel
+    private val homeViewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
 
         val binding = DataBindingUtil.inflate<FragmentHomeBinding>(
             inflater, R.layout.fragment_home, container, false

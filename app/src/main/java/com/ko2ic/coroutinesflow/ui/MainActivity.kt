@@ -1,4 +1,4 @@
-package com.ko2ic.coroutinesflow
+package com.ko2ic.coroutinesflow.ui
 
 import android.os.Bundle
 import android.view.Menu
@@ -13,7 +13,10 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
+import com.ko2ic.coroutinesflow.R
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
