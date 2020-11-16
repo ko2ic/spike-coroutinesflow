@@ -59,12 +59,17 @@
                         android:layout_height="wrap_content"
                         android:text="@={viewModel.input}" />
 
-                    <ImageButton
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <Button
                         android:id="@+id/search"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:src="@android:drawable/ic_menu_search"
+                        android:text="retrofit"
                         android:onClick="@{viewModel.onSearchClick()}" />
 
                     <ImageButton
@@ -76,6 +81,21 @@
                         android:layout_centerVertical="true"
                         android:onClick="@{viewModel.onSearchClick2()}" />
 
+                    <Button
+                        android:id="@+id/searchByKtor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ktor"
+                        android:onClick="@{viewModel.onSearchClickKtor()}" />
+
+                    <ImageButton
+                        android:id="@+id/search2ByKtor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:src="@android:drawable/ic_menu_search"
+                        android:layout_centerVertical="true"
+                        android:onClick="@{viewModel.onSearchClick2Ktor()}" />
 
                 </LinearLayout>
 

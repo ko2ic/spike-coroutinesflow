@@ -1,10 +1,10 @@
 package com.ko2ic.coroutinesflow.repository.http.common
 
-import com.ko2ic.coroutinesflow.common.repository.http.HttpClientBase
+import com.ko2ic.coroutinesflow.common.repository.http.KtorHttpClientBase
 import okhttp3.OkHttpClient
 import javax.inject.Inject
 
-open class HttpClientDefault @Inject constructor() : HttpClientBase() {
+open class KtorHttpClientDefault @Inject constructor() : KtorHttpClientBase() {
 
     override val baseUrl: String = "https://jsonplaceholder.typicode.com"
 
@@ -14,7 +14,7 @@ open class HttpClientDefault @Inject constructor() : HttpClientBase() {
     }
 }
 
-open class HttpClientErrorMock : HttpClientBase() {
+open class KtorHttpClientErrorMock @Inject constructor() : KtorHttpClientBase() {
 
     override val baseUrl: String = "https://api.github.com"
 

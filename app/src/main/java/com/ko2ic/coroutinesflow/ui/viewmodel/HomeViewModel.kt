@@ -9,12 +9,16 @@ import com.ko2ic.coroutinesflow.common.model.exception.HttpErrorTypeException
 import com.ko2ic.coroutinesflow.common.ui.viewmodel.Action
 import com.ko2ic.coroutinesflow.common.ui.viewmodel.toFlow
 import com.ko2ic.coroutinesflow.repository.CommentRepository
+import com.ko2ic.coroutinesflow.repository.KtorCommentRepository
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 
-class HomeViewModel @ViewModelInject constructor(val repository: CommentRepository) : ViewModel() {
+class HomeViewModel @ViewModelInject constructor(
+    val repository: CommentRepository,
+    val ktorRepository: KtorCommentRepository
+) : ViewModel() {
 
     val input = ObservableField("")
 
@@ -46,6 +50,37 @@ class HomeViewModel @ViewModelInject constructor(val repository: CommentReposito
     fun onSearchClick2(): Action = Action {
         // HttpClientErrorMockで必ずエラーが出るAPIにしている
         repository.error().onEach {
+        }.catch { cause ->
+            val e = cause as HttpErrorTypeException
+            print(e.errorType)
+            freeOutput.set(e.errorType.toString())
+            freeOutputVisivility.set(true)
+        }.onCompletion {
+            // TODO
+            print("onCompletion")
+        }.launchIn(viewModelScope)
+    }
+
+    fun onSearchClickKtor(): Action = Action {
+        if (!input.get().isNullOrBlank()) {
+            ktorRepository.fetchComments(Integer.parseInt(input.get()!!)).onEach {
+                it?.map { entity -> CommentViewModel(entity) }.orEmpty().also { viewModels ->
+                    this@HomeViewModel.render(viewModels)
+                }
+            }.catch { cause ->
+                val e = cause as HttpErrorTypeException
+                freeOutput.set(e.errorType.toString())
+                freeOutputVisivility.set(true)
+            }.onCompletion {
+                // TODO
+            }.launchIn(viewModelScope)
+        }
+        freeOutputVisivility.set(false)
+    }
+
+    fun onSearchClick2Ktor(): Action = Action {
+        // HttpClientErrorMockで必ずエラーが出るAPIにしている
+        ktorRepository.error().onEach {
         }.catch { cause ->
             val e = cause as HttpErrorTypeException
             print(e.errorType)
