@@ -6,11 +6,9 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ko2ic.coroutinesflow.common.model.exception.HttpErrorTypeException
-import com.ko2ic.coroutinesflow.common.repository.http.HttpClient
 import com.ko2ic.coroutinesflow.common.ui.viewmodel.Action
 import com.ko2ic.coroutinesflow.common.ui.viewmodel.toFlow
 import com.ko2ic.coroutinesflow.repository.CommentRepository
-import com.ko2ic.coroutinesflow.repository.http.common.HttpClientErrorMock
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
@@ -46,13 +44,13 @@ class HomeViewModel @ViewModelInject constructor(val repository: CommentReposito
     }
 
     fun onSearchClick2(): Action = Action {
-        freeOutputVisivility.set(true)
-
         // HttpClientErrorMockで必ずエラーが出るAPIにしている
-        CommentRepository(HttpClient(HttpClientErrorMock())).error().onEach {
+        repository.error().onEach {
         }.catch { cause ->
             val e = cause as HttpErrorTypeException
             print(e.errorType)
+            freeOutput.set(e.errorType.toString())
+            freeOutputVisivility.set(true)
         }.onCompletion {
             // TODO
             print("onCompletion")
@@ -66,6 +64,8 @@ class HomeViewModel @ViewModelInject constructor(val repository: CommentReposito
             }
         }.catch { cause ->
             val e = cause as HttpErrorTypeException
+            freeOutput.set(e.errorType.toString())
+            freeOutputVisivility.set(true)
         }.onCompletion {
             // TODO
         }.launchIn(viewModelScope)

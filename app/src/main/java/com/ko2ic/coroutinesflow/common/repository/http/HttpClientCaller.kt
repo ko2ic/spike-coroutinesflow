@@ -6,15 +6,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-class HttpClient(val locator: HttpClientLocator) {
+class HttpClientCaller {
 
-    inline fun <R, reified T> call(crossinline call: suspend (T) -> R): Flow<R> {
-
-        val client = locator.lookup(clazz = T::class.java)
+    fun <R> call(call: suspend () -> R): Flow<R> {
 
         return flow {
             try {
-                emit(call(client))
+                emit(call())
             } catch (e: Throwable) {
                 val exception: HttpErrorTypeException = HttpClientBase.asHttpErrorTypeException(e)
                 throw exception
