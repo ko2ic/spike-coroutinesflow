@@ -1,11 +1,14 @@
 package com.ko2ic.coroutinesflow.di
 
+import com.ko2ic.coroutinesflow.CommentRepository
 import com.ko2ic.coroutinesflow.common.repository.http.HttpClientCaller
 import com.ko2ic.coroutinesflow.common.repository.http.HttpClientLocator
+import com.ko2ic.coroutinesflow.model.annotation.HttpClientStrategy
 import com.ko2ic.coroutinesflow.model.annotation.HttpLocate
+import com.ko2ic.coroutinesflow.model.valueobject.HttpClientStrategyType
 import com.ko2ic.coroutinesflow.model.valueobject.HttpLocateType
-import com.ko2ic.coroutinesflow.repository.CommentRepository
-import com.ko2ic.coroutinesflow.repository.KtorCommentRepository
+import com.ko2ic.coroutinesflow.repository.CommentRepositoryImpl
+import com.ko2ic.coroutinesflow.repository.KtorCommentRepositoryImpl
 import com.ko2ic.coroutinesflow.repository.http.KtorCommentHttpClient
 import com.ko2ic.coroutinesflow.repository.http.common.HttpClientDefault
 import com.ko2ic.coroutinesflow.repository.http.common.HttpClientErrorMock
@@ -32,11 +35,20 @@ class InfrastructuresModule {
 
     @Provides
     @Singleton
+    @HttpClientStrategy(HttpClientStrategyType.Retrofit)
     fun provideCommentRepository(
         caller: HttpClientCaller,
         locator: HttpClientLocator,
         @HttpLocate(HttpLocateType.Github) errorLocator: HttpClientLocator
-    ) = CommentRepository(caller, locator, errorLocator)
+    ): CommentRepository = CommentRepositoryImpl(caller, locator, errorLocator)
+
+    @Provides
+    @Singleton
+    @HttpClientStrategy(HttpClientStrategyType.Ktor)
+    fun provideKtorCommentRepository(
+        caller: HttpClientCaller,
+        client: KtorCommentHttpClient
+    ): CommentRepository = KtorCommentRepositoryImpl(caller, client)
 
     @Provides
     @Singleton
@@ -44,12 +56,5 @@ class InfrastructuresModule {
         client: KtorHttpClientDefault,
         errorClient: KtorHttpClientErrorMock
     ) = KtorCommentHttpClient(client, errorClient)
-
-    @Provides
-    @Singleton
-    fun provideKtorCommentRepository(
-        caller: HttpClientCaller,
-        client: KtorCommentHttpClient
-    ) = KtorCommentRepository(caller, client)
 }
 

@@ -8,16 +8,14 @@ import androidx.lifecycle.viewModelScope
 import com.ko2ic.coroutinesflow.common.model.exception.HttpErrorTypeException
 import com.ko2ic.coroutinesflow.common.ui.viewmodel.Action
 import com.ko2ic.coroutinesflow.common.ui.viewmodel.toFlow
-import com.ko2ic.coroutinesflow.repository.CommentRepository
-import com.ko2ic.coroutinesflow.repository.KtorCommentRepository
+import com.ko2ic.coroutinesflow.model.Comment
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 
 class HomeViewModel @ViewModelInject constructor(
-    val repository: CommentRepository,
-    val ktorRepository: KtorCommentRepository
+    private val comment: Comment,
 ) : ViewModel() {
 
     val input = ObservableField("")
@@ -49,7 +47,7 @@ class HomeViewModel @ViewModelInject constructor(
 
     fun onSearchClick2(): Action = Action {
         // HttpClientErrorMockで必ずエラーが出るAPIにしている
-        repository.error().onEach {
+        comment.error().onEach {
         }.catch { cause ->
             val e = cause as HttpErrorTypeException
             print(e.errorType)
@@ -63,7 +61,7 @@ class HomeViewModel @ViewModelInject constructor(
 
     fun onSearchClickKtor(): Action = Action {
         if (!input.get().isNullOrBlank()) {
-            ktorRepository.fetchComments(Integer.parseInt(input.get()!!)).onEach {
+            comment.fetchCommentsByKtor(Integer.parseInt(input.get()!!)).onEach {
                 it?.map { entity -> CommentViewModel(entity) }.orEmpty().also { viewModels ->
                     this@HomeViewModel.render(viewModels)
                 }
@@ -80,7 +78,7 @@ class HomeViewModel @ViewModelInject constructor(
 
     fun onSearchClick2Ktor(): Action = Action {
         // HttpClientErrorMockで必ずエラーが出るAPIにしている
-        ktorRepository.error().onEach {
+        comment.errorByKtor().onEach {
         }.catch { cause ->
             val e = cause as HttpErrorTypeException
             print(e.errorType)
@@ -93,7 +91,7 @@ class HomeViewModel @ViewModelInject constructor(
     }
 
     private fun load(postId: Int) {
-        repository.fetchComments(postId).onEach {
+        comment.fetchComments(postId).onEach {
             it?.map { entity -> CommentViewModel(entity) }.orEmpty().also { viewModels ->
                 this@HomeViewModel.render(viewModels)
             }
