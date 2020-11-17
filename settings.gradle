@@ -1,2 +1,7 @@
+include ':di'
+include ':moduleinfrastructures'
+include ':moduledomains'
+include ':infrastructures'
+include ':domains'
 include ':app'
 rootProject.name = "spike-coroutinesflow"

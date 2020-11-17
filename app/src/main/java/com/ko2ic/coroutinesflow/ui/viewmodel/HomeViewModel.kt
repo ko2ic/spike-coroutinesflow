@@ -8,14 +8,13 @@ import androidx.lifecycle.viewModelScope
 import com.ko2ic.coroutinesflow.common.model.exception.HttpErrorTypeException
 import com.ko2ic.coroutinesflow.common.ui.viewmodel.Action
 import com.ko2ic.coroutinesflow.common.ui.viewmodel.toFlow
-import com.ko2ic.coroutinesflow.model.Comment
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 
 class HomeViewModel @ViewModelInject constructor(
-    private val comment: Comment,
+    private val comment: com.ko2ic.coroutinesflow.model.Comment,
 ) : ViewModel() {
 
     val input = ObservableField("")
