@@ -1,3 +1,4 @@
+include ':ui'
 include ':di'
 include ':moduleinfrastructures'
 include ':moduledomains'

@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/infrastructures" />
             <option value="$PROJECT_DIR$/moduledomains" />
             <option value="$PROJECT_DIR$/moduleinfrastructures" />
+            <option value="$PROJECT_DIR$/ui" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

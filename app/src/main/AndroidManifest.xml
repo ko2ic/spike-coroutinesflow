@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ko2ic.coroutinesflow">
+    package="com.ko2ic.coroutinesflow.app">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".App"
+        android:name="com.ko2ic.coroutinesflow.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Spikecoroutinesflow">
         <activity
-            android:name=".ui.MainActivity"
+            android:name="com.ko2ic.coroutinesflow.ui.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.Spikecoroutinesflow.NoActionBar">
             <intent-filter>
