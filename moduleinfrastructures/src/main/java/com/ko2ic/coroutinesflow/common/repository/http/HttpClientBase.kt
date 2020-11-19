@@ -5,6 +5,7 @@ import com.ko2ic.coroutinesflow.common.model.enums.HttpErrorType
 import com.ko2ic.coroutinesflow.common.model.exception.HttpErrorTypeException
 import io.ktor.client.features.*
 import io.ktor.client.statement.*
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -18,6 +19,7 @@ import java.nio.charset.Charset
 
 abstract class HttpClientBase : com.ko2ic.coroutinesflow.common.repository.http.HttpClientLocator {
 
+    @ExperimentalSerializationApi
     private val retrofit by lazy {
         val httpClient =
             com.ko2ic.coroutinesflow.common.repository.http.OkHttpClientSingleton.instance.httpClient
@@ -33,6 +35,7 @@ abstract class HttpClientBase : com.ko2ic.coroutinesflow.common.repository.http.
             .build()
     }
 
+    @ExperimentalSerializationApi
     override fun <T> lookup(clazz: Class<T>): T = retrofit.create(clazz)
 
     abstract val baseUrl: String
@@ -45,9 +48,8 @@ abstract class HttpClientBase : com.ko2ic.coroutinesflow.common.repository.http.
             is HttpException -> {
                 // Retrofit用
                 val excption = throwable
-                var json: String? = null
                 try {
-                    json = excption.response()?.errorBody()?.string()
+                    val json = excption.response()?.errorBody()?.string()
 
                     HttpErrorTypeException(
                         HttpErrorType.StatusCode(
